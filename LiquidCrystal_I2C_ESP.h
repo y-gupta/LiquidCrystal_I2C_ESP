@@ -1,6 +1,6 @@
 //YWROBOT
-#ifndef LiquidCrystal_I2C_h
-#define LiquidCrystal_I2C_h
+#ifndef LiquidCrystal_I2C_ESP_h
+#define LiquidCrystal_I2C_ESP_h
 
 #include <inttypes.h>
 #include "Print.h" 
@@ -55,6 +55,7 @@
 class LiquidCrystal_I2C : public Print {
 public:
   LiquidCrystal_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
+  LiquidCrystal_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows, uint8_t lcd_sda,uint8_t lcd_scl);
   void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS );
   void clear();
   void home();
@@ -88,7 +89,6 @@ public:
 #endif
   void command(uint8_t);
   void init();
-  void oled_init();
 
 ////compatibility API function aliases
 void blink_on();						// alias for blink()
@@ -122,10 +122,11 @@ private:
   uint8_t _displaycontrol;
   uint8_t _displaymode;
   uint8_t _numlines;
-  bool _oled = false;
   uint8_t _cols;
   uint8_t _rows;
   uint8_t _backlightval;
+  uint8_t _sdaPin;
+  uint8_t _sclPin;
 };
 
 #endif

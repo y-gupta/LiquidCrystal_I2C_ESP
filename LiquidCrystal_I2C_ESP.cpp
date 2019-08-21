@@ -1,6 +1,6 @@
 // Based on the work by DFRobot
 
-#include "LiquidCrystal_I2C.h"
+#include "LiquidCrystal_I2C_ESP.h"
 #include <inttypes.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 
@@ -51,10 +51,14 @@ LiquidCrystal_I2C::LiquidCrystal_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t l
   _rows = lcd_rows;
   _backlightval = LCD_NOBACKLIGHT;
 }
-
-void LiquidCrystal_I2C::oled_init(){
-  _oled = true;
-	init_priv();
+LiquidCrystal_I2C::LiquidCrystal_I2C(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows, uint8_t lcd_sda,uint8_t lcd_scl)
+{
+  _Addr = lcd_Addr;
+  _cols = lcd_cols;
+  _rows = lcd_rows;
+  _sdaPin = lcd_sda;
+  _sclPin = lcd_scl;
+  _backlightval = LCD_NOBACKLIGHT;
 }
 
 void LiquidCrystal_I2C::init(){
@@ -63,7 +67,16 @@ void LiquidCrystal_I2C::init(){
 
 void LiquidCrystal_I2C::init_priv()
 {
-	Wire.begin();
+	if (_sdaPin != NULL)
+	{
+		Wire.begin(_sdaPin,_sclPin);
+	}
+	else
+	{
+		Wire.begin();
+	}
+	
+	
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);  
 }
@@ -132,7 +145,6 @@ void LiquidCrystal_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 void LiquidCrystal_I2C::clear(){
 	command(LCD_CLEARDISPLAY);// clear display, set cursor position to zero
 	delayMicroseconds(2000);  // this command takes a long time!
-  if (_oled) setCursor(0,0);
 }
 
 void LiquidCrystal_I2C::home(){
@@ -317,8 +329,6 @@ void LiquidCrystal_I2C::printstr(const char c[]){
 
 
 // unsupported API functions
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 void LiquidCrystal_I2C::off(){}
 void LiquidCrystal_I2C::on(){}
 void LiquidCrystal_I2C::setDelay (int cmdDelay,int charDelay) {}
@@ -328,5 +338,5 @@ uint8_t LiquidCrystal_I2C::init_bargraph(uint8_t graphtype){return 0;}
 void LiquidCrystal_I2C::draw_horizontal_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_col_end){}
 void LiquidCrystal_I2C::draw_vertical_graph(uint8_t row, uint8_t column, uint8_t len,  uint8_t pixel_row_end){}
 void LiquidCrystal_I2C::setContrast(uint8_t new_val){}
-#pragma GCC diagnostic pop
+
 	
