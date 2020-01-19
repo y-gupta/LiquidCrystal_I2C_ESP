@@ -5,7 +5,7 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/blueinnotech/LiquidCrystal_I2C_ESP.git"
+    "url": "https://github.com/y-gupta/LiquidCrystal_I2C_ESP.git"
   },
   "frameworks": "arduino",
   "platforms":
